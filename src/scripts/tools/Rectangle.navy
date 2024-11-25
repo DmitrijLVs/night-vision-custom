@@ -1,0 +1,158 @@
+[OVERLAY name = Rectangle, ctx = Canvas, version = 1.0.0, author = Dmitry]
+
+prop('color', {type: 'string', def: '#cccccc'});
+prop('lineWidth', {type: 'number', def: 2});
+
+let timeId = null;
+let mouseX = 0;
+let rectangles = {}
+
+function init() {
+    $core.dataExt.rectangles = $core.data;
+
+    for (const rectangle of $core.dataExt.rectangles || []) {
+        rectangles[rectangle.uuid] = new $lib.Rectangle($core, rectangle);
+        rectangles[rectangle.uuid].onSelect = rectangleSelected;
+    }
+}
+
+function draw(ctx) {
+    if (!$core.dataExt.rectangles?.length && rectangles) {
+        Object.values(rectangles).forEach(x => removeRectangle(x.data.uuid))
+    }
+
+    for (const rectangle of Object.values(rectangles)) {
+        rectangle.draw(ctx)
+    }
+}
+
+function keydown(event) {
+    if (event.code === 'Backspace' || event.code === 'Delete') {
+        let s = Object.values(rectangles).find(x => x.selected)
+        if (s) removeRectangle(s.data.uuid)
+    }
+}
+
+function mousedown(event) {
+    if ($core.meta.tool !== 'Rectangle') {
+        rectangleSelected(null);
+        $events.emit('update-layout');
+        propagate('mousedown', event);
+        return void 0;
+    }
+
+    mouseX = $core.mouse.x;
+    rectangleSelected(null);
+    $events.emit('update-layout');
+    propagate('mousedown', event);
+    newRectangle();
+}
+
+function mouseup(event) {
+    propagate('mouseup', event);
+
+    let s = Object.values(rectangles).find(x => x.selected);
+    if (s) {
+        $events.emit('change-tool-data', {
+            data: $core.dataExt.rectangles,
+            id: $core.id
+        });
+    }
+
+    $events.emit('scroll-lock', false);
+}
+
+function mousemove(event) {
+    propagate('mousemove', event);
+}
+
+function mouseMoved() {
+    let d = Math.abs(mouseX - $core.mouse.x)
+    return d > 5
+}
+
+function unfinishedRectangles() {
+    for (const rectangle of Object.values(rectangles)) {
+        if (rectangle.state === 'dragging') {
+            return true
+        }
+    }
+    return false
+}
+
+function removeRectangle(uuid) {
+    delete rectangles[uuid]
+    $core.dataExt.rectangles = $core.dataExt.rectangles?.filter(x => x.uuid !== uuid) ?? [];
+    $events.emit('update-layout')
+
+    $events.emit('change-tool-data', {
+        data: $core.dataExt.rectangles,
+        id: $core.id
+    });
+
+    $events.emit('object-selected', {id: undefined, type: undefined});
+}
+
+function newRectangle() {
+
+    // if (unfinishedRectangles() || mouseMoved()) return
+    if (mouseMoved()) {
+        return void 0;
+    }
+
+    if (!$core.dataExt.rectangles) {
+        $core.dataExt.rectangles = []
+    }
+
+    let time = $core.layout.x2time($core.cursor.x);
+    let yValue = $core.layout.y2value($core.cursor.y);
+    let uuid = $lib.Utils.uuid3();
+
+    let rectangle = {
+        // points: {x: time, y: yValue, width: 50, height: 50},
+        p1: [time, yValue],
+        p2: [time, yValue],
+        p3: [time, yValue],
+        p4: [time, yValue],
+        lineWidth: $props.lineWidth,
+        color: $props.color,
+        uuid: uuid
+    };
+
+    $core.dataExt.rectangles.push(rectangle);
+
+    rectangles[uuid] = new $lib.Rectangle($core, rectangle, true);
+    rectangles[uuid].onSelect = rectangleSelected;
+    rectangles[uuid].selected = true;
+    rectangles[uuid].state = 'dragging';
+
+    $events.emit('scroll-lock', true);
+    $events.emit('update-layout');
+
+    $events.emit('change-tool-data', {
+        data: $core.dataExt.rectangles,
+        id: $core.id
+    });
+}
+
+function propagate(name, data) {
+    for (const rectangle of Object.values(rectangles)) {
+        rectangle[name](data)
+    }
+}
+
+function rectangleSelected($uuid) {
+    if (!$uuid) {
+        $events.emit('object-selected', {id: undefined, type: undefined});
+    }
+
+    for (const uuid in rectangles) {
+        const selected = uuid === $uuid;
+        rectangles[uuid].selected = selected;
+        if (selected) {
+            $events.emit('object-selected', {id: uuid, type: 'Rectangle'});
+        }
+    }
+
+    $events.emit('update-layout')
+}

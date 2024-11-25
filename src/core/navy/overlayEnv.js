@@ -25,6 +25,9 @@ import Segment from '../primitives/navyLib/seg.js'
 import Brush from '../primitives/navyLib/brush.js'
 import Curve from '../primitives/navyLib/curve.js'
 import Pin from '../primitives/navyLib/pin.js'
+import Rectangle from '../primitives/navyLib/rectangle.js'
+import RectangleShape from '../primitives/navyLib/rectangleShape.js'
+import RectanglePin from '../primitives/navyLib/rectanglePin.js'
 import {candleColor, fastSma, rescaleFont} from '../primitives/navyLib/helperFns.js'
 import Ray from "../primitives/navyLib/ray.js";
 import candleBodyTransparent from "../primitives/navyLib/candleBodyTransparent.js";
@@ -60,7 +63,7 @@ export default class OverlayEnv {
             candleBody, candleBodyTransparent, candleWick, volumeBar,
             fastSma, avgVolume, candleColor,
             roundRect, rescaleFont, drawArrow,
-            TrendLine, Segment, Pin, Ray, Brush, Curve,
+            TrendLine, Segment, Pin, Ray, Brush, Curve, Rectangle, RectangleShape, RectanglePin,
             Utils
         }
 

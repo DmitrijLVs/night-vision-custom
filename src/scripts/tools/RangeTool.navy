@@ -40,7 +40,14 @@ draw(ctx) {
         const roundRectX = mainRectCenterX - textWidth / 2 - padding; // center the text rectangle relative to the main rectangle
         const roundRectWidth = textWidth + 2 * padding;
         const roundRectHeight = 50;  // adjust as needed
-        const roundRectY = percent() > 0 ? Math.min(y1, y2) - roundRectHeight - padding : Math.max(y1, y2) + padding;
+        let roundRectY = percent() > 0 ? Math.min(y1, y2) - roundRectHeight - padding : Math.max(y1, y2) + padding;
+        if (roundRectY <= 0) {
+            roundRectY = 0;
+        }
+        if (roundRectY + roundRectHeight >= $core.layout.height) {
+            roundRectY = $core.layout.height - roundRectHeight;
+        }
+
         const roundRectRadius = 5;   // adjust as needed
         ctx.fillStyle = color + 'cc';
         $lib.roundRect(ctx, roundRectX, roundRectY, roundRectWidth, roundRectHeight, roundRectRadius);

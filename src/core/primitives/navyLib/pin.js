@@ -51,12 +51,15 @@ export default class Pin {
     }
 
     draw_circle(ctx) {
-
         if (this.line.selected) {
             var r = this.RADIUS, lw = 1.5
         } else {
             var r = this.RADIUS * 0.95, lw = 1
         }
+
+        let p = this.data[this.name]
+        this.t = p[0]
+        this.y$ = p[1]
 
         ctx.lineWidth = lw
         ctx.strokeStyle = this.COLOR_BR
@@ -81,7 +84,12 @@ export default class Pin {
 
         // Save current position in dataExt
         this.data[this.name] = [this.t, this.y$]
+    }
 
+    rectangleUpdate() {
+        let p = this.data[this.name]
+        this.t = p[0]
+        this.y$ = p[1]
     }
 
     mousemove(event) {

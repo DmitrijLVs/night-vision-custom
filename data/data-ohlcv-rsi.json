@@ -33676,6 +33676,39 @@
           "settings": {
             "zIndex": 1000
           }
+        },
+        {
+          "name": "Rectangle",
+          "type": "Rectangle",
+          "drawingTool": true,
+          "data": [
+            {
+              "p1": [
+                  1726903372298.4038,
+                  2.4640240376850606
+              ],
+              "p2": [
+                  1577664000000,
+                  8.673474712041882
+              ],
+              "p3": [
+                  1726903372298.4038,
+                  2.4640240376850606
+              ],
+              "p4": [
+                  1726903372298.4038,
+                  2.4640240376850606
+              ],
+              "lineWidth": 2,
+              "color": "#cccccc",
+              "uuid": "5253403978336095",
+              "overlayType": "Rectangle"
+          }
+          ],
+          "props": {},
+          "settings": {
+            "zIndex": 1000
+          }
         }
       ]
     }
@@ -33699,6 +33732,11 @@
       "type": "LineToolHorizontalRay",
       "label": "Horizontal Ray (Right Click)",
       "icon": "<svg fill=\"currentColor\" xmlns=\"http://www.w3.org/2000/svg\" height=\"24\" viewBox=\"0 -960 960 960\" width=\"24\"><path d=\"M180-380q-42 0-71-29t-29-71q0-42 29-71t71-29q31 0 56 17t36 43h608v80H272q-11 26-36 43t-56 17Z\"/></svg>\n"
+    },
+    {
+      "type": "Rectangle",
+      "label": "Rectangle",
+      "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"><g id=\"SVGRepo_bgCarrier\" stroke-width=\"0\"></g><g id=\"SVGRepo_tracerCarrier\" stroke-linecap=\"round\" stroke-linejoin=\"round\"></g><g id=\"SVGRepo_iconCarrier\"> <rect x=\"3\" y=\"5\" width=\"18\" height=\"14\" rx=\"2\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"></rect> </g></svg>"
     },
     {
       "type": "RangeTool",
